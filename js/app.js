@@ -74,6 +74,11 @@ function loadEvents(date) {
 //do the main event loading
 var map;
 function initialize() {
+	if(!store.enabled) {
+		alert('Local storage is not supported by your browser. Please disabled "Private Mode", or upgrade to a modern browser');
+		return;
+	}
+
 	console.log(store.getAll());
 	if (typeof(store.get('goingList')) == 'undefined') {
 		store.set('goingList', {going: []});
