@@ -7,9 +7,15 @@
 		padding-left: 15px;
 		padding-right: 15px;
 	}
+	.picker
+	{
+		font-size: 17px;
+	}
 	.datepicker {
 		background-color:transparent;
 		border: 0px solid;
+		font-weight: bold;
+		margin-bottom: 15px;
 	}
 	.datepicker textarea:focus, input:focus{
 		outline: 0;
@@ -29,8 +35,6 @@
     }
     .navbar img
     {
-    	width: 50px;
-    	height: 50px;
     	margin-right: 10px;
     	border-radius: 100px;
     }
@@ -38,6 +42,10 @@
         overflow: visible;
         padding-top: 5px;
         padding-bottom: 5px;
+    }
+    nav
+    {
+    	margin-bottom: 10px !important;
     }
     .goingcount
     {
@@ -68,8 +76,8 @@
 		<p id="description">Description: </p>
 		<button id="imgoing" type="button" class="btn btn-warning btn-lg btn-block"><span id="star" class="glyphicon glyphicon-star-empty"></span> I'm Going!</button>
 		<p class="goingcount"><span id="goingcount"></span></p><hr>
-	<!--	<div id="fb-root"></div>
-<script>(function(d, s, id) {
+		<div id="fb-root"></div>
+<!--<script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
@@ -81,10 +89,8 @@
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>-->
 		</div>
 		<div class="row">
-			<h4>Showing events for <input type="text" readonly="true" class="datepicker" id="datepicker"></h4>
-			<button id="selectdifferent" type="button" class="btn btn-default">Select a different date.</button>
+			<span class="picker">Showing events for<br><span class="glyphicon glyphicon-calendar"></span> <input type="text" readonly="true" class="datepicker" id="datepicker"></span>
 		</div>
-		<hr>
 		<div class="row">
 		<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
 		        <li class="active"><a href="#list" data-toggle="tab">List</a></li>
@@ -261,9 +267,6 @@
 			loadEvents(dateText);
 		},
 		minDate: today,
-	});
-	$('#selectdifferent').click(function() {
-		$('#datepicker').focus();
 	});
 	$('#list').on("click", "#eventdetails", function() {
 		$('.row').hide();
