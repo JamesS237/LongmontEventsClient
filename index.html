@@ -89,7 +89,7 @@
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>-->
 		</div>
 		<div class="row">
-			<span class="picker">Showing events for<br><span class="glyphicon glyphicon-calendar"></span> <input type="text" readonly="true" class="datepicker" id="datepicker"></span>
+			<span class="picker">Showing events for<br><span id="cal" class="glyphicon glyphicon-calendar"></span> <input type="text" readonly="true" class="datepicker" id="datepicker"></span>
 		</div>
 		<div class="row">
 		<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
@@ -286,6 +286,9 @@
 		$('#eventpage').hide();
 
 		$('#title, #address, #date, #description').html('');
+	});
+	$('#cal').click(function() {
+		$('#datepicker').focus();
 	});
 	$('#imgoing').click(function() {
 		if ($(this).attr('data-isactive') != 'true') {
