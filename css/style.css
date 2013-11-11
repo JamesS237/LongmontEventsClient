@@ -1,0 +1,49 @@
+/*various css*/
+.row {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+.picker
+{
+	font-size: 17px;
+}
+.datepicker {
+	background-color:transparent;
+	border: 0px solid;
+	font-weight: bold;
+	margin-bottom: 15px;
+}
+.datepicker textarea:focus, input:focus{
+	outline: 0;
+}
+#map-canvas {
+	width: 100%;
+	height: 500px;
+	margin-top: 10px;
+}
+#noeventsfortoday {
+	margin-top: 15px;
+	display: none;
+}
+#eventpage
+{
+	display: none;
+}
+.navbar img
+{
+	margin-right: 10px;
+	border-radius: 100px;
+}
+.navbar .navbar-brand {
+	overflow: visible;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+nav
+{
+	margin-bottom: 10px !important;
+}
+.goingcount
+{
+	text-align: center;
+}
