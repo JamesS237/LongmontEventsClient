@@ -8,8 +8,8 @@
 		padding-right: 15px;
 	}
 	.datepicker {
-	background-color:transparent;
-	border: 0px solid;
+		background-color:transparent;
+		border: 0px solid;
 	}
 	.datepicker textarea:focus, input:focus{
 		outline: 0;
@@ -17,40 +17,57 @@
 	#map-canvas {
         width: 100%;
         height: 500px;
-    }
-    #tabs {
-    	margin-bottom: 10px;
+        margin-top: 10px;
     }
     #noeventsfortoday {
+    	margin-top: 15px;
     	display: none;
     }
     #eventpage
     {
     	display: none;
     }
-	</style>
+    .navbar img
+    {
+    	width: 50px;
+    	height: 50px;
+    	margin-right: 10px;
+    	border-radius: 100px;
+    }
+    .navbar .navbar-brand {
+        overflow: visible;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .goingcount
+    {
+    	text-align: center;
+    }
+    </style>
 	<title>Longmont Events</title>
 	<meta charset="utf-8">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
 	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="css/bootstrap-theme.css" rel="stylesheet">
 	<link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
 </head>
 <body>
 	<nav class="navbar navbar-default" role="navigation">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#">Longmont Events</a>
+			<a class="navbar-brand" href="#"> <img src="wheel.png"><b>Longmont Events</b></a>
 		</div>
 	</nav>
 	<div class="container">
 		<div id="eventpage">
-		<button type="button" id="backbutton" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>
+		<button type="button" id="backbutton" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>
 		<h2><span id="title"></span></h2>
 		<p id="address">Address: </p>
 		<p id="date">Date: </p>
 		<p id="description">Description: </p>
 		<button id="imgoing" type="button" class="btn btn-warning btn-lg btn-block"><span id="star" class="glyphicon glyphicon-star-empty"></span> I'm Going!</button>
-		<p><span id="goingcount"></span> people are going.</p><hr>
+		<p class="goingcount"><span id="goingcount"></span></p><hr>
 	<!--	<div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -69,13 +86,13 @@
 		</div>
 		<hr>
 		<div class="row">
-		<div id="noeventsfortoday" class="alert alert-warning">No Events For Today!</div>
 		<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
 		        <li class="active"><a href="#list" data-toggle="tab">List</a></li>
-		        <li><a href="#myevents" data-toggle="tab">My Events</a></li>
+		        <li><a href="#myevents" id="myeventslink" data-toggle="tab">My Events</a></li>
 		        <li><a href="#map" data-toggle="tab" id="maplink">Map</a></li>
 		</ul>
 		    <div class="tab-content">
+		    <div id="noeventsfortoday" class="alert alert-warning">No Events For Today!</div>
 		        <div class="tab-pane active" id="list">
 
 		        </div>
@@ -93,14 +110,14 @@
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<script>
-	serverURL = 'http://192.168.40:8000/';
+	serverURL = 'http://leserver.jacksonroberts.me/';
 	function insertIntoList(data) {
 		console.log(data);
 		var event_string = "<h3>" + data.title + "</h3>";
 		event_string += "<p> Address: " + data.address + "</p>";
 		event_string += "<p> Date: " + data.date + "</p>";
 		event_string += "<p> Description: " + data.description.slice(0,140) + "...</p>"
-		event_string += "<a id=\"eventdetails\" href=\"#" + data.identifier + "\" class=\"btn btn-info btn-sm\"><span class=\"glyphicon glyphicon-eye-open\"></span> More Info</a>";
+		event_string += "<a id=\"eventdetails\" href=\"#" + data.identifier + "\" class=\"btn btn-info\"><span class=\"glyphicon glyphicon-eye-open\"></span> More Info</a>";
 		event_string += "<hr>";
 
 		$('#list').append(event_string);
@@ -203,6 +220,7 @@
 		$('#eventpage').show();
 		$('#star').attr('class', 'glyphicon glyphicon-star-empty');
 		$('#imgoing').attr('class', 'btn btn-lg btn-warning btn-block');
+		$('#imgoing').attr('data-isactive', 'false');
 
 		console.log(localStorage.goingList);
 		goingList = JSON.parse(localStorage.goingList);
@@ -210,6 +228,7 @@
 		if (goingList.indexOf(String(id)) > -1) {
 			$('#star').attr('class', 'glyphicon glyphicon-star');
 			$('#imgoing').attr('class', 'btn btn-lg btn-success btn-block');
+			$('#imgoing').attr('data-isactive', 'true');
 		}
 		$.getJSON(apiURL, function(data) {
 			console.log(data);
@@ -218,7 +237,12 @@
 			$('#date').append(data.date);
 			$('#description').append(data.description);
 			$('#imgoing').attr('data-id', id);
-			$('#goingcount').text(data.going_count)
+			if (data.going_count == 1) {
+				var suffix = ' person is going.';
+			} else {
+				var suffix = ' people are going.'
+			}
+			$('#goingcount').text(data.going_count + suffix)
 		});
 	}
 	$('#maplink').click(function() {
@@ -231,10 +255,12 @@
 			map.setZoom(12);
 		}, 1);
 	});
+	var today = new Date();
 	$("#datepicker").datepicker({
 		onSelect: function(dateText) {
 			loadEvents(dateText);
-		}
+		},
+		minDate: today,
 	});
 	$('#selectdifferent').click(function() {
 		$('#datepicker').focus();
@@ -259,17 +285,27 @@
 		$('#title, #address, #date, #description').html('');
 	});
 	$('#imgoing').click(function() {
-		var apiURL = serverURL + 'api/imgoing/' + $(this).attr('data-id') + '/';
-		$.getJSON(apiURL, function(data) {
-			console.log(data);
-		});
-		$('#star').attr('class', 'glyphicon glyphicon-star');
-		$('#imgoing').attr('class', 'btn btn-lg btn-success btn-block');
-		$('#goingcount').text(parseInt($('#goingcount').text()) + 1);
-		goingList = JSON.parse(localStorage.goingList);
-		goingList.push($(this).attr('data-id'));
-		localStorage.goingList = JSON.stringify(goingList);
-		localStorage.getItem('going-list');
+		if ($(this).attr('data-isactive') != 'true') {
+			var apiURL = serverURL + 'api/imgoing/' + $(this).attr('data-id') + '/';
+			$.getJSON(apiURL, function(data) {
+				console.log(data);
+			});
+			$('#imgoing').attr('data-isactive', 'true');
+			$('#star').attr('class', 'glyphicon glyphicon-star');
+			$('#imgoing').attr('class', 'btn btn-lg btn-success btn-block');
+			var newGoingCount = parseInt($('#goingcount').text()) + 1;
+			if (newGoingCount == 1) {
+				suffix = ' person is going.';
+			} else {
+				suffix = ' people are going.';
+			}
+			$('#goingcount').text(newGoingCount + suffix);
+			goingList = JSON.parse(localStorage.goingList);
+			goingList.push($(this).attr('data-id'));
+			localStorage.goingList = JSON.stringify(goingList);
+			localStorage.getItem('going-list');
+			loadMyEvents();
+		}
 	})
 	</script>
 </body>
