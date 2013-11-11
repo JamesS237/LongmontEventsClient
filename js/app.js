@@ -11,7 +11,7 @@ function insertIntoList(data) {
 	$('#list').append(event_string);
 }
 function loadMyEvents() {
-	idList = JSON.parse(localStorage.goingList);
+	idList = store.get('goingList');
 	for (i = 0; i < idList.length; i++){
 		var apiURL = serverURL + 'api/getevent/' + idList[i] + '/';
 		$.getJSON(apiURL, function(data) {
@@ -74,12 +74,12 @@ function loadEvents(date) {
 //do the main event loading
 var map;
 function initialize() {
-	console.log(localStorage);
-	if (typeof(localStorage.goingList) == 'undefined') {
-		localStorage.goingList = '[]';
+	console.log(store.getAll());
+	if (typeof(store.get('goingList')) == 'undefined') {
+		store.set('goingList', {going: []});
 		console.log('made it');
 	} else {
-		console.log('didn');
+		console.log('didnt');
 	}
 	geocoder = new google.maps.Geocoder();
 	console.log('initialized map and geocoder');
@@ -110,10 +110,10 @@ function loadEventPage(id) {
 	$('#imgoing').attr('class', 'btn btn-lg btn-warning btn-block');
 	$('#imgoing').attr('data-isactive', 'false');
 
-	console.log(localStorage.goingList);
-	goingList = JSON.parse(localStorage.goingList);
+	console.log(store.get('goingList'));
+	goingList = store.get('goingList');
 
-	if (goingList.indexOf(String(id)) > -1) {
+	if (goingList.going.indexOf(String(id)) > -1) {
 		$('#star').attr('class', 'glyphicon glyphicon-star');
 		$('#imgoing').attr('class', 'btn btn-lg btn-success btn-block');
 		$('#imgoing').attr('data-isactive', 'true');
@@ -188,10 +188,10 @@ $('#imgoing').click(function() {
 			suffix = ' people are going.';
 		}
 		$('#goingcount').text(newGoingCount + suffix);
-		goingList = JSON.parse(localStorage.goingList);
+		goingList = store.get('goingList').going;
 		goingList.push($(this).attr('data-id'));
-		localStorage.goingList = JSON.stringify(goingList);
-		localStorage.getItem('going-list');
+		store.set('goingList', {going: goingList});
+		//localStorage.getItem('going-list');
 		loadMyEvents();
 	}
 });
